@@ -2,9 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import studentRouter from './routes/studentRouter.js';
+
 import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRoute.js';
+import orderRouter from './routes/orderRoute.js';
 
 let app = express();
 
@@ -44,11 +45,13 @@ app.use(
         console.log('Error connecting to MongoDB'); 
     })
 
-    app.use('/students', studentRouter)
+    
 
     app.use('/products', productRouter)
 
     app.use('/users', userRouter)
+
+    app.use('/orders', orderRouter)
 
     app.listen(5000, () => {
         console.log('Server is running on port 5000');
