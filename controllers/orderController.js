@@ -66,13 +66,13 @@ export async function createOrder(req,res){
                     altNames : item.altNames,
                     description : item.description,
                     image : item.image,
-                    labledPrice : item.labledPrice,
+                    labledPrice : item.labeledPrice,
                     price : item.price,
                 },
                 quantity : orderInfo.products[i].qty,
             }
             total += (item.price * orderInfo.products[i].qty)
-            labelledTotal += (item.labledPrice * orderInfo.products[i].qty)
+            labeledTotal += (item.labeledPrice * orderInfo.products[i].qty)
 
         }
             
@@ -85,7 +85,7 @@ export async function createOrder(req,res){
             total : 0,
             phone : orderInfo.phone,
             products : products,
-            labelledTotal : labelledTotal,
+            labeledTotal : labeledTotal,
             total : total
         })
 

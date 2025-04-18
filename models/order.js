@@ -27,7 +27,7 @@ const orderSchema = mongoose.Schema({
         required : true,
         default : "pending"
     },
-    labelledTotal : {
+    labeledTotal : {
         type : Number,
         required : true
     },
@@ -62,7 +62,7 @@ const orderSchema = mongoose.Schema({
                         required : true
                     }
                 ],
-                labledPrice : {
+                labeledPrice : {
                     type : Number,
                     required : true
                 },
