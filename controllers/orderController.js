@@ -57,8 +57,7 @@ export async function createOrder(req,res){
                 return
             } 
 
-            total += item.price * orderInfo.products[i].quantity
-            labelledTotal += item.labelledPrice * orderInfo.products[i].quantity
+            
 
             products[i] ={
                 productInfo : {
@@ -67,11 +66,13 @@ export async function createOrder(req,res){
                     altNames : item.altNames,
                     description : item.description,
                     image : item.image,
-                    labelledPrice : item.labelledPrice,
+                    labledPrice : item.labledPrice,
                     price : item.price,
                 },
-                quantity : orderInfo.products[i].quantity,
+                quantity : orderInfo.products[i].qty,
             }
+            total += (item.price * orderInfo.products[i].qty)
+            labelledTotal += (item.labledPrice * orderInfo.products[i].qty)
 
         }
             
@@ -81,10 +82,11 @@ export async function createOrder(req,res){
             email : req.user.email,
             name : orderInfo.name,
             address : orderInfo.address,
-            total : total,
-            labelledTotal : labelledTotal,
+            total : 0,
             phone : orderInfo.phone,
             products : products,
+            labelledTotal : labelledTotal,
+            total : total
         })
 
         const createdOrder = await order.save()
@@ -93,9 +95,11 @@ export async function createOrder(req,res){
             order : createdOrder
         })
 
-    }catch{
+    }catch(err){
         res.status(500).json({
-            message : "Order not created"
+            message : "Order not created",
+            error : err
+            
         })
 
     }
