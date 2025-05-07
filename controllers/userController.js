@@ -69,7 +69,7 @@ export function loginUser(req,res){
                                 role : user.role,
                                 img : user.img,
                             },
-                            "hasi-@2000"
+                            process.env.JWT_KEY,
                         )
                         res.json(
                             {
