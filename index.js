@@ -6,6 +6,8 @@ import cors from 'cors';
 import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRoute.js';
 import orderRouter from './routes/orderRoute.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let app = express();
 
@@ -40,7 +42,7 @@ app.use(
 
 
 
-    mongoose.connect('mongodb+srv://admin:123@cluster0.m0fa4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').
+    mongoose.connect(process.env.MONGODB_URL).
     then(()=> {
         console.log('Connected to MongoDB');
     }).catch(()=>{
@@ -58,5 +60,4 @@ app.use(
     app.listen(5000, () => {
         console.log('Server is running on port 5000');
         });
-    //mongodb+srv://admin:123@cluster0.m0fa4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-    //mongodb+srv://admin:123@cluster0.m0fa4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    
