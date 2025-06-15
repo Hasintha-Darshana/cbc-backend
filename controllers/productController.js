@@ -1,70 +1,71 @@
 import Product from "../models/product.js";
 import { isAdmin } from "./userController.js";
 
-export async function getProducts(req,res){
-    try{
-        if(isAdmin(req)){
+export async function getProducts(req, res) {
+    try {
+        if (isAdmin(req)) {
             const products = await Product.find()
             res.json(products)
-        }else{
-            const products = await Product.find({isAvailable : true})
+        } else {
+            const products = await Product.find({ isAvailable: true })
             res.json(products)
         }
-        
-    }catch(err){
-        res.json({message: "Failed to get products",
+
+    } catch (err) {
+        res.json({
+            message: "Failed to get products",
             error: err.message
         })
     }
-    
+
 }
 
 export function saveProducts(req, res) {
-    
-    if(!isAdmin(req) ){
+
+    if (!isAdmin(req)) {
         res.status(403).json({
             message: "You are not authorized to create a product"
         })
         return
     }
-     
-    console.log(req.body );
-    
+
+    console.log(req.body);
+
 
     const product = new Product(
         req.body
-        
+
     )
 
-    product.save().then(()=>{
-       res.json(
-        {
-            message: "product saved"
-        }
-       )
-    }).catch(()=>{
+    product.save().then(() => {
+        res.json(
+            {
+                message: "product saved"
+            }
+        )
+    }).catch(() => {
         res.json(
             {
                 message: "product not saved"
             }
-           )
+        )
     })
 
 }
 
 export async function deleteProduct(req, res) {
-    if(!isAdmin(req) ){
+    if (!isAdmin(req)) {
         res.status(403).json({
             message: "You are not authorized to delete a product"
         })
         return
     }
-    try{
-        await Product.deleteOne({productId : req.params.productId})
+    try {
+        await Product.deleteOne({ productId: req.params.productId })
         res.json({
             message: "product deleted"
         })
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
             message: "Failed to delete product",
             error: err.message
@@ -72,69 +73,58 @@ export async function deleteProduct(req, res) {
     }
 }
 
-export async function updateProduct(req,res){
-    if(!isAdmin (req)){
+export async function updateProduct(req, res) {
+    if (!isAdmin(req)) {
         res.status(403).json({
-            message : "You are not authorized to update a product"
+            message: "You are not authorized to update a product"
         })
         return
     }
 
     const productId = req.params.productId
-    const updatingData =req.body
+    const updatingData = req.body
 
-    try{
+    try {
         await Product.updateOne(
-            {productId : productId},
+            { productId: productId },
             updatingData
         )
 
         res.json({
-            message : "Product Updated Successfully."
+            message: "Product Updated Successfully."
         })
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            message : "Internal server error",
-            error : err
+            message: "Internal server error",
+            error: err
         })
     }
 }
 
-export async function getProductById(req,res){
-    const productId = req.params.productId
+export async function getProductById(req, res) {
+    const productId = req.params.productId;
 
-    try{
+    try {
+        const product = await Product.findOne({ productId });
 
-        const product = await Product.findOne(
-            {productId : productId}
-        ) 
-
-        if(product == null){
-            res.status(404).json({
-                message : "Product not found"
-            })
-            return
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
         }
 
-        if(Product.isAvailable){
-            res.json(product)
-        }else{
-           if(!isAdmin(req)){
-            res.status(403).json({
-                message : "Product not found"
-            })
-            return                        
-           }else{
-            res.json(product)
-           }
-
+        if (product.isAvailable) {
+            return res.json(product);
         }
-        
 
-    }catch(err){
-        res.status(500).json({
-            message : "Internal server error",
-            error : err
-        })
+        if (!isAdmin(req)) {
+            return res.status(403).json({ message: "Product not found" });
+        }
+
+        return res.json(product);
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "Internal server error",
+            error: err.message || err,
+        });
     }
 }
